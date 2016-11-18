@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha'
 import { never, fulfill } from '../src/main'
 import assert from 'assert'
+import { bimap } from 'fantasy-land'
 
 describe('never', () => {
 	it('then should be identity', () => {
@@ -20,7 +21,7 @@ describe('never', () => {
 
 	it('bimap should be identity', () => {
 		var p = never()
-		assert.strictEqual(p, p.bimap(assert.ifError, assert.ifError))
+		assert.strictEqual(p, p[bimap](assert.ifError, assert.ifError))
 	})
 
 	it('ap should be identity', () => {

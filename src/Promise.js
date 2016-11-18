@@ -53,6 +53,13 @@ class Core {
 		return this.map(f)
 	}
 
+	[fl.bimap] (r, f) {
+		const n = this.near()
+		return n === this
+			? bimap(r, f, this, new Future())
+			: n[fl.bimap](r, f)
+	}
+
 	[fl.ap] (pf) {
 		return pf.ap(this)
 	}
@@ -105,13 +112,6 @@ export class Future extends Core {
 	map (f) {
 		const n = this.near()
 		return n === this ? map(f, this, new Future()) : n.map(f)
-	}
-
-	bimap (r, f) {
-		const n = this.near()
-		return n === this
-			? bimap(r, f, this, new Future())
-			: n.bimap(r, f)
 	}
 
 	// ap :: Promise e (a -> b) -> Promise e a -> Promise e b
@@ -246,7 +246,7 @@ class Fulfilled extends Core {
 		return map(f, this, new Future())
 	}
 
-	bimap (_, f) {
+	[fl.bimap] (_, f) {
 		return this.map(f)
 	}
 
@@ -309,7 +309,7 @@ class Rejected extends Core {
 		return this
 	}
 
-	bimap (r) {
+	[fl.bimap] (r) {
 		return bimap(r, void 0, this, new Future())
 	}
 
@@ -367,7 +367,7 @@ class Never extends Core {
 		return this
 	}
 
-	bimap () {
+	[fl.bimap] () {
 		return this
 	}
 
